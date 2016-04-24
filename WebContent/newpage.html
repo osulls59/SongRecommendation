@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Hello MapReduce</title>
+	<link rel="stylesheet" type="text/css" href="css/grayscale.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/my.css">
+	<script type="text/javascript" src="scripts/jquery-2.2.3.js"></script>
+	<script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+</head>
+<!-- Start of JavaScript code -->
+<script language="javascript">  
+
+		window.onload = function() {
+			$("#10songs").hide();
+			$("#PosiibleSongs").hide();
+		};
+		
+		function get10Songs() {
+			$("#10songs").hide();
+			if ($("#textinputbox").val() == "") {
+				alert("Come on lads, show me the song");
+			} else {
+				$.ajax({
+				     type:'post',
+				     url:'GuestbookServlet',
+				     dataType:'json',
+				     data:{title:''+ $("#textinputbox").val()} ,
+				     success:function(jsonob){
+				    	$("#PosiibleSongs").hide();
+				    	$("#10songs").html("");
+				    	var songs = jsonob.title;
+				    	if (songs.length == 0) {
+				    		$("#10songs").html("Sorry, bro, We dont have the song in our database yet");
+				    		$("#10songs").show();
+				    	} else {
+				    		var i = 0;
+					    	for (; i < songs.length; i ++) {
+					    		$("#10songs").append("<h4 align='left' style='color:#333;'>" + (i+1) + ": " + songs[i] + "</h4>");
+					    	}
+					      	$("#10songs").show();
+				    	}
+				    	
+				      
+				    }
+				   });
+			}
+		}
+		
+		function titleCheck() {
+			$("#PosiibleSongs").hide();
+			$("#10songs").hide();
+			$.ajax({
+			     type:'post',
+			     url:'GuestbookServlet',
+			     dataType:'json',
+			     data:{word:''+ $("#textinputbox").val()} ,
+			     success:function(jsonob){
+			    	 $("#PosiibleSongs").html("<h4 style='color:white;'>Do you means:</h4>");
+			    	 var songs = jsonob.title;
+			    	 if(songs.length != 0) {
+			    		 var i = 0;
+			    		 for(; i < songs.length; i ++) {
+			    			 $("#PosiibleSongs").append("<h5 style='color: white'> " + songs[i] + " </h5>")
+			    		 }
+			    		 $("#PosiibleSongs").show();
+			    	 }
+			    }
+			   });
+		}
+</script>  
+
+<!-- Start of layout code -->
+<body background="img/Music.jpg">
+  <h1 id="title" align="center" style="color:white;">Song Recommender</h1>
+  
+  <div class="row">
+  	<div class="col-md-3"></div>
+  	<div class="col-md-6">
+  		<div class="input-group" align="center" style="margin-bottom:30px"">
+			      <input id="textinputbox" onchange="titleCheck()" name="song" placeholder="Search for">
+			      <span class="input-group-btn">
+			         <button class="btn btn-primary" type="button" onclick="get10Songs()">Find Similar Songs</button>
+			      </span>
+		</div>
+  	</div>
+  	<div class="col-md-3"></div>
+  </div>
+  
+  <div class="row">
+  	<div class="mol-md-4"></div>
+  	<div class="mol-md-4">
+  		<div id="PosiibleSongs" align="center" style="background-color: #333; width:100%">
+			  <h4 style="color:white;">Do you means</h4>
+		</div>
+  	</div>
+  	<div class="mol-md-4"></div>
+  </div>
+  
+  <div class="row">
+  	<div class="col-md-4"></div>
+  	<div class="col-md-4">
+		  <div id="recoSongs" align="center">
+			  <div class="well" id="10songs" >
+			  </div>
+		  </div>
+	</div>
+  	<div class="col-md-4"></div>
+  </div>
+  
+	<footer>
+	   <h5> Created By: </h5>
+	   <h5> Seán O'Sullivan, Ye Qiu,  Bryant Kong, Mingyao Chen </h5>
+	</footer>   
+</body>
+</html>
